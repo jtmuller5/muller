@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.53">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Joe Muller">
+<meta name="dcterms.date" content="2024-07-05">
+<meta name="description" content="Generic code blocks to grok your data.">
+
+<title>Understanding Your Dataset – Muller</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Muller</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jtmuller5"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Understanding Your Dataset</h1>
+                  <div>
+        <div class="description">
+          Generic code blocks to grok your data.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">pandas</div>
+                <div class="quarto-category">deep-learning</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Joe Muller </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 5, 2024</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">July 5, 2024</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Almost every time I start a new project, I begin by performing a cursory analysis of the data set. This sort of high-level analysis gives me a general idea about the kind of data I’m working with, the size of the data set, and the types of relationships I may be interested in exploring.</p>
+<p>I will be using the <a href="https://www.kaggle.com/datasets/willianoliveiragibin/ufo-sightings/data">UFO Sightings</a> dataset in this post to demonstrate useful methods for understanding your data. To get started, open the dataset in Kaggle and press the “Download” button and move the <code>ufo-sightings-transformed.csv</code> file into your working directory.</p>
+<p>Install <code>ipykernel</code> if you haven’t already so you can keep your Jupyter notebook environment isolated.</p>
+<pre><code>poetry add ipykernel</code></pre>
+<div id="cell-2" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install pandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Collecting pandas
+  Downloading pandas-2.2.2-cp312-cp312-macosx_11_0_arm64.whl.metadata (19 kB)
+Collecting numpy&gt;=1.26.0 (from pandas)
+  Downloading numpy-2.0.0-cp312-cp312-macosx_14_0_arm64.whl.metadata (60 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.9/60.9 kB 2.7 MB/s eta 0:00:00
+Requirement already satisfied: python-dateutil&gt;=2.8.2 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from pandas) (2.9.0.post0)
+Collecting pytz&gt;=2020.1 (from pandas)
+  Downloading pytz-2024.1-py2.py3-none-any.whl.metadata (22 kB)
+Collecting tzdata&gt;=2022.7 (from pandas)
+  Downloading tzdata-2024.1-py2.py3-none-any.whl.metadata (1.4 kB)
+Requirement already satisfied: six&gt;=1.5 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from python-dateutil&gt;=2.8.2-&gt;pandas) (1.16.0)
+Downloading pandas-2.2.2-cp312-cp312-macosx_11_0_arm64.whl (11.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.3/11.3 MB 55.8 MB/s eta 0:00:0000:010:01
+Downloading numpy-2.0.0-cp312-cp312-macosx_14_0_arm64.whl (5.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 54.7 MB/s eta 0:00:00a 0:00:01
+Downloading pytz-2024.1-py2.py3-none-any.whl (505 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 505.5/505.5 kB 30.1 MB/s eta 0:00:00
+Downloading tzdata-2024.1-py2.py3-none-any.whl (345 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 345.4/345.4 kB 25.6 MB/s eta 0:00:00
+Installing collected packages: pytz, tzdata, numpy, pandas
+Successfully installed numpy-2.0.0 pandas-2.2.2 pytz-2024.1 tzdata-2024.1
+
+[notice] A new release of pip is available: 24.0 -&gt; 24.1.1
+[notice] To update, run: pip install --upgrade pip
+Note: you may need to restart the kernel to use updated packages.</code></pre>
+</div>
+</div>
+<div id="cell-3" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">pandas</span> as pd</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> <span class="ch">'ufo-sightings-transformed.csv'</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.<span class="fu">read_csv</span>(file_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol type="1">
+<li>Display the First Few Rows</li>
+</ol>
+<div id="cell-5" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.<span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th data-quarto-table-cell-role="th">Date_time</th>
+<th data-quarto-table-cell-role="th">date_documented</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Month</th>
+<th data-quarto-table-cell-role="th">Hour</th>
+<th data-quarto-table-cell-role="th">Season</th>
+<th data-quarto-table-cell-role="th">Country_Code</th>
+<th data-quarto-table-cell-role="th">Country</th>
+<th data-quarto-table-cell-role="th">Region</th>
+<th data-quarto-table-cell-role="th">Locale</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">UFO_shape</th>
+<th data-quarto-table-cell-role="th">length_of_encounter_seconds</th>
+<th data-quarto-table-cell-role="th">Encounter_Duration</th>
+<th data-quarto-table-cell-role="th">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>1949-10-10 20:30:00</td>
+<td>4/27/2004</td>
+<td>1949</td>
+<td>10</td>
+<td>20</td>
+<td>Autumn</td>
+<td>USA</td>
+<td>United States</td>
+<td>Texas</td>
+<td>San Marcos</td>
+<td>29.883056</td>
+<td>-97.941111</td>
+<td>Cylinder</td>
+<td>2700.0</td>
+<td>45 minutes</td>
+<td>This event took place in early fall around 194...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>1949-10-10 21:00:00</td>
+<td>12/16/2005</td>
+<td>1949</td>
+<td>10</td>
+<td>21</td>
+<td>Autumn</td>
+<td>USA</td>
+<td>United States</td>
+<td>Texas</td>
+<td>Bexar County</td>
+<td>29.384210</td>
+<td>-98.581082</td>
+<td>Light</td>
+<td>7200.0</td>
+<td>1-2 hrs</td>
+<td>1949 Lackland AFB&amp;#44 TX. Lights racing acros...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2</td>
+<td>1955-10-10 17:00:00</td>
+<td>1/21/2008</td>
+<td>1955</td>
+<td>10</td>
+<td>17</td>
+<td>Autumn</td>
+<td>GBR</td>
+<td>United Kingdom</td>
+<td>England</td>
+<td>Chester</td>
+<td>53.200000</td>
+<td>-2.916667</td>
+<td>Circle</td>
+<td>20.0</td>
+<td>20 seconds</td>
+<td>Green/Orange circular disc over Chester&amp;#44 En...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3</td>
+<td>1956-10-10 21:00:00</td>
+<td>1/17/2004</td>
+<td>1956</td>
+<td>10</td>
+<td>21</td>
+<td>Autumn</td>
+<td>USA</td>
+<td>United States</td>
+<td>Texas</td>
+<td>Edna</td>
+<td>28.978333</td>
+<td>-96.645833</td>
+<td>Circle</td>
+<td>20.0</td>
+<td>1/2 hour</td>
+<td>My older brother and twin sister were leaving ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>4</td>
+<td>1960-10-10 20:00:00</td>
+<td>1/22/2004</td>
+<td>1960</td>
+<td>10</td>
+<td>20</td>
+<td>Autumn</td>
+<td>USA</td>
+<td>United States</td>
+<td>Hawaii</td>
+<td>Kaneohe</td>
+<td>21.418056</td>
+<td>-157.803611</td>
+<td>Light</td>
+<td>900.0</td>
+<td>15 minutes</td>
+<td>AS a Marine 1st Lt. flying an FJ4B fighter/att...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Display the Last Few Rows</li>
+</ol>
+<div id="cell-7" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df.<span class="fu">tail</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th data-quarto-table-cell-role="th">Date_time</th>
+<th data-quarto-table-cell-role="th">date_documented</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Month</th>
+<th data-quarto-table-cell-role="th">Hour</th>
+<th data-quarto-table-cell-role="th">Season</th>
+<th data-quarto-table-cell-role="th">Country_Code</th>
+<th data-quarto-table-cell-role="th">Country</th>
+<th data-quarto-table-cell-role="th">Region</th>
+<th data-quarto-table-cell-role="th">Locale</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">UFO_shape</th>
+<th data-quarto-table-cell-role="th">length_of_encounter_seconds</th>
+<th data-quarto-table-cell-role="th">Encounter_Duration</th>
+<th data-quarto-table-cell-role="th">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">80323</td>
+<td>80323</td>
+<td>2013-09-09 21:15:00</td>
+<td>9/30/2013</td>
+<td>2013</td>
+<td>9</td>
+<td>21</td>
+<td>Autumn</td>
+<td>USA</td>
+<td>United States</td>
+<td>Tennessee</td>
+<td>Nashville</td>
+<td>36.165833</td>
+<td>-86.784444</td>
+<td>Light</td>
+<td>600.0</td>
+<td>10 minutes</td>
+<td>Round from the distance/slowly changing colors...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">80324</td>
+<td>80324</td>
+<td>2013-09-09 22:00:00</td>
+<td>9/30/2013</td>
+<td>2013</td>
+<td>9</td>
+<td>22</td>
+<td>Autumn</td>
+<td>USA</td>
+<td>United States</td>
+<td>Idaho</td>
+<td>Boise</td>
+<td>43.613611</td>
+<td>-116.202500</td>
+<td>Circle</td>
+<td>1200.0</td>
+<td>20 minutes</td>
+<td>Boise&amp;#44 ID&amp;#44 spherical&amp;#44 20 min&amp;#44 10 r...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">80325</td>
+<td>80325</td>
+<td>2013-09-09 22:00:00</td>
+<td>9/30/2013</td>
+<td>2013</td>
+<td>9</td>
+<td>22</td>
+<td>Autumn</td>
+<td>USA</td>
+<td>United States</td>
+<td>California</td>
+<td>Napa Abajo</td>
+<td>38.297222</td>
+<td>-122.284444</td>
+<td>Other</td>
+<td>1200.0</td>
+<td>hour</td>
+<td>Napa UFO&amp;#44</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">80326</td>
+<td>80326</td>
+<td>2013-09-09 22:20:00</td>
+<td>9/30/2013</td>
+<td>2013</td>
+<td>9</td>
+<td>22</td>
+<td>Autumn</td>
+<td>USA</td>
+<td>United States</td>
+<td>Virginia</td>
+<td>Vienna</td>
+<td>38.901111</td>
+<td>-77.265556</td>
+<td>Circle</td>
+<td>5.0</td>
+<td>5 seconds</td>
+<td>Saw a five gold lit cicular craft moving fastl...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">80327</td>
+<td>80327</td>
+<td>2013-09-09 23:00:00</td>
+<td>9/30/2013</td>
+<td>2013</td>
+<td>9</td>
+<td>23</td>
+<td>Autumn</td>
+<td>USA</td>
+<td>United States</td>
+<td>Oklahoma</td>
+<td>Edmond</td>
+<td>35.652778</td>
+<td>-97.477778</td>
+<td>Cigar</td>
+<td>1020.0</td>
+<td>17 minutes</td>
+<td>2 witnesses 2 miles apart&amp;#44 Red &amp;amp; White...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Display Basic Information</li>
+</ol>
+<div id="cell-9" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df.<span class="fu">info</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 80328 entries, 0 to 80327
+Data columns (total 17 columns):
+ #   Column                       Non-Null Count  Dtype  
+---  ------                       --------------  -----  
+ 0   Unnamed: 0                   80328 non-null  int64  
+ 1   Date_time                    80328 non-null  object 
+ 2   date_documented              80328 non-null  object 
+ 3   Year                         80328 non-null  int64  
+ 4   Month                        80328 non-null  int64  
+ 5   Hour                         80328 non-null  int64  
+ 6   Season                       80328 non-null  object 
+ 7   Country_Code                 80069 non-null  object 
+ 8   Country                      80069 non-null  object 
+ 9   Region                       79762 non-null  object 
+ 10  Locale                       79871 non-null  object 
+ 11  latitude                     80328 non-null  float64
+ 12  longitude                    80328 non-null  float64
+ 13  UFO_shape                    78398 non-null  object 
+ 14  length_of_encounter_seconds  80328 non-null  float64
+ 15  Encounter_Duration           80328 non-null  object 
+ 16  Description                  80313 non-null  object 
+dtypes: float64(3), int64(4), object(10)
+memory usage: 10.4+ MB</code></pre>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Display Summary Statistics</li>
+</ol>
+<div id="cell-11" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display summary statistics for numerical columns</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df.<span class="fu">describe</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Month</th>
+<th data-quarto-table-cell-role="th">Hour</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">length_of_encounter_seconds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>80328.000000</td>
+<td>80328.000000</td>
+<td>80328.000000</td>
+<td>80328.000000</td>
+<td>80328.000000</td>
+<td>80328.000000</td>
+<td>8.032800e+04</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>40163.500000</td>
+<td>2003.850463</td>
+<td>6.835026</td>
+<td>15.525172</td>
+<td>38.124963</td>
+<td>-86.772015</td>
+<td>9.017336e+03</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>23188.840549</td>
+<td>10.426547</td>
+<td>3.234876</td>
+<td>7.753750</td>
+<td>10.469146</td>
+<td>39.697805</td>
+<td>6.202322e+05</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>0.000000</td>
+<td>1906.000000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>-82.862752</td>
+<td>-176.658056</td>
+<td>1.000000e-03</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>20081.750000</td>
+<td>2001.000000</td>
+<td>4.000000</td>
+<td>10.000000</td>
+<td>34.134722</td>
+<td>-112.073333</td>
+<td>3.000000e+01</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>40163.500000</td>
+<td>2006.000000</td>
+<td>7.000000</td>
+<td>19.000000</td>
+<td>39.412500</td>
+<td>-87.903611</td>
+<td>1.800000e+02</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>60245.250000</td>
+<td>2011.000000</td>
+<td>9.000000</td>
+<td>21.000000</td>
+<td>42.788333</td>
+<td>-78.755000</td>
+<td>6.000000e+02</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>80327.000000</td>
+<td>2014.000000</td>
+<td>12.000000</td>
+<td>23.000000</td>
+<td>72.700000</td>
+<td>178.441900</td>
+<td>9.783600e+07</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ol start="5" type="1">
+<li>Display Column Names</li>
+</ol>
+<div id="cell-13" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the column names</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>Index(['Unnamed: 0', 'Date_time', 'date_documented', 'Year', 'Month', 'Hour',
+       'Season', 'Country_Code', 'Country', 'Region', 'Locale', 'latitude',
+       'longitude', 'UFO_shape', 'length_of_encounter_seconds',
+       'Encounter_Duration', 'Description'],
+      dtype='object')</code></pre>
+</div>
+</div>
+<ol start="6" type="1">
+<li>Display Data Types of Columns</li>
+</ol>
+<div id="cell-15" class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display data types of each column</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df.dtypes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="7" type="1">
+<li>Check for Missing Values</li>
+</ol>
+<div id="cell-17" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for missing values in each column</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df.<span class="fu">isnull</span>().<span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>Unnamed: 0                        0
+Date_time                         0
+date_documented                   0
+Year                              0
+Month                             0
+Hour                              0
+Season                            0
+Country_Code                    259
+Country                         259
+Region                          566
+Locale                          457
+latitude                          0
+longitude                         0
+UFO_shape                      1930
+length_of_encounter_seconds       0
+Encounter_Duration                0
+Description                      15
+dtype: int64</code></pre>
+</div>
+</div>
+<ol start="8" type="1">
+<li>Display Unique Values in a Column</li>
+</ol>
+<div id="cell-19" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display unique values in a specific column (replace 'column_name' with the actual column name)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df[<span class="ch">'Season'</span>].<span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>array(['Autumn', 'Winter', 'Spring', 'Summer'], dtype=object)</code></pre>
+</div>
+</div>
+<ol start="9" type="1">
+<li>Display Value Counts for a Column</li>
+</ol>
+<div id="cell-21" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display value counts for a specific column (replace 'column_name' with the actual column name)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df[<span class="ch">'UFO_shape'</span>].<span class="fu">value_counts</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>UFO_shape
+Light        16565
+Triangle      7865
+Circle        7607
+Fireball      6208
+Other         5649
+Unknown       5584
+Sphere        5387
+Disk          5213
+Oval          3733
+Formation     2457
+Cigar         2057
+Changing      1962
+Flash         1328
+Rectangle     1296
+Cylinder      1283
+Diamond       1178
+Chevron        952
+Egg            759
+Teardrop       750
+Cone           316
+Cross          233
+Delta            7
+Round            2
+Crescent         2
+Pyramid          1
+Flare            1
+Hexagon          1
+Dome             1
+Changed          1
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+<ol start="10" type="1">
+<li>Display the Shape of the DataFrame</li>
+</ol>
+<div id="cell-23" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the shape of the DataFrame (number of rows and columns)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>(80328, 17)</code></pre>
+</div>
+</div>
+<ol start="11" type="1">
+<li>Display Correlation Matrix</li>
+</ol>
+<div id="cell-25" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the correlation matrix for numerical columns</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>df.<span class="fu">corr</span>(numeric_only<span class="op">=</span>True)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Month</th>
+<th data-quarto-table-cell-role="th">Hour</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">length_of_encounter_seconds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Unnamed: 0</td>
+<td>1.000000</td>
+<td>-0.055143</td>
+<td>-0.041756</td>
+<td>0.031134</td>
+<td>0.060405</td>
+<td>-0.006686</td>
+<td>0.001302</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Year</td>
+<td>-0.055143</td>
+<td>1.000000</td>
+<td>-0.025127</td>
+<td>0.040974</td>
+<td>0.002784</td>
+<td>-0.014156</td>
+<td>-0.010510</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Month</td>
+<td>-0.041756</td>
+<td>-0.025127</td>
+<td>1.000000</td>
+<td>0.023835</td>
+<td>0.029142</td>
+<td>-0.012316</td>
+<td>0.001245</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Hour</td>
+<td>0.031134</td>
+<td>0.040974</td>
+<td>0.023835</td>
+<td>1.000000</td>
+<td>0.011434</td>
+<td>-0.012567</td>
+<td>-0.002810</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">latitude</td>
+<td>0.060405</td>
+<td>0.002784</td>
+<td>0.029142</td>
+<td>0.011434</td>
+<td>1.000000</td>
+<td>-0.390241</td>
+<td>0.002645</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">longitude</td>
+<td>-0.006686</td>
+<td>-0.014156</td>
+<td>-0.012316</td>
+<td>-0.012567</td>
+<td>-0.390241</td>
+<td>1.000000</td>
+<td>0.006452</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">length_of_encounter_seconds</td>
+<td>0.001302</td>
+<td>-0.010510</td>
+<td>0.001245</td>
+<td>-0.002810</td>
+<td>0.002645</td>
+<td>0.006452</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ol start="12" type="1">
+<li>Plot Histograms for Numerical Columns</li>
+</ol>
+<div id="cell-27" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install matplotlib</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Collecting matplotlib
+  Downloading matplotlib-3.9.1-cp312-cp312-macosx_11_0_arm64.whl.metadata (11 kB)
+Collecting contourpy&gt;=1.0.1 (from matplotlib)
+  Downloading contourpy-1.2.1-cp312-cp312-macosx_11_0_arm64.whl.metadata (5.8 kB)
+Collecting cycler&gt;=0.10 (from matplotlib)
+  Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools&gt;=4.22.0 (from matplotlib)
+  Downloading fonttools-4.53.1-cp312-cp312-macosx_11_0_arm64.whl.metadata (162 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 162.6/162.6 kB 3.5 MB/s eta 0:00:00a 0:00:01
+Collecting kiwisolver&gt;=1.3.1 (from matplotlib)
+  Downloading kiwisolver-1.4.5-cp312-cp312-macosx_11_0_arm64.whl.metadata (6.4 kB)
+Requirement already satisfied: numpy&gt;=1.23 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib) (2.0.0)
+Requirement already satisfied: packaging&gt;=20.0 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib) (24.0)
+Collecting pillow&gt;=8 (from matplotlib)
+  Downloading pillow-10.4.0-cp312-cp312-macosx_11_0_arm64.whl.metadata (9.2 kB)
+Collecting pyparsing&gt;=2.3.1 (from matplotlib)
+  Downloading pyparsing-3.1.2-py3-none-any.whl.metadata (5.1 kB)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib) (2.9.0.post0)
+Requirement already satisfied: six&gt;=1.5 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.16.0)
+Downloading matplotlib-3.9.1-cp312-cp312-macosx_11_0_arm64.whl (7.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.8/7.8 MB 46.0 MB/s eta 0:00:00a 0:00:01
+Downloading contourpy-1.2.1-cp312-cp312-macosx_11_0_arm64.whl (245 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 245.3/245.3 kB 17.3 MB/s eta 0:00:00
+Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.53.1-cp312-cp312-macosx_11_0_arm64.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 51.7 MB/s eta 0:00:0000:01
+Downloading kiwisolver-1.4.5-cp312-cp312-macosx_11_0_arm64.whl (64 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.0/65.0 kB 7.8 MB/s eta 0:00:00
+Downloading pillow-10.4.0-cp312-cp312-macosx_11_0_arm64.whl (3.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.4/3.4 MB 49.6 MB/s eta 0:00:00a 0:00:01
+Downloading pyparsing-3.1.2-py3-none-any.whl (103 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.2/103.2 kB 11.4 MB/s eta 0:00:00
+Installing collected packages: pyparsing, pillow, kiwisolver, fonttools, cycler, contourpy, matplotlib
+Successfully installed contourpy-1.2.1 cycler-0.12.1 fonttools-4.53.1 kiwisolver-1.4.5 matplotlib-3.9.1 pillow-10.4.0 pyparsing-3.1.2
+
+[notice] A new release of pip is available: 24.0 -&gt; 24.1.1
+[notice] To update, run: pip install --upgrade pip
+Note: you may need to restart the kernel to use updated packages.</code></pre>
+</div>
+</div>
+<div id="cell-28" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">matplotlib.pyplot</span> as plt</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histograms for numerical columns</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>df.<span class="fu">hist</span>(figsize<span class="op">=</span>(<span class="fl">10</span>, <span class="fl">10</span>), bins<span class="op">=</span><span class="fl">30</span>, edgecolor<span class="op">=</span><span class="ch">'black'</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>plt.<span class="fu">tight_layout</span>()</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>plt.<span class="fu">show</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="13" type="1">
+<li>Plot a Heatmap of Missing Values (using <a href="https://pypi.org/project/seaborn/">seaborn</a>)</li>
+</ol>
+<div id="cell-30" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install seaborn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Collecting seaborn
+  Downloading seaborn-0.13.2-py3-none-any.whl.metadata (5.4 kB)
+Requirement already satisfied: numpy!=1.24.0,&gt;=1.20 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from seaborn) (2.0.0)
+Requirement already satisfied: pandas&gt;=1.2 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from seaborn) (2.2.2)
+Requirement already satisfied: matplotlib!=3.6.1,&gt;=3.4 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from seaborn) (3.9.1)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib!=3.6.1,&gt;=3.4-&gt;seaborn) (1.2.1)
+Requirement already satisfied: cycler&gt;=0.10 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib!=3.6.1,&gt;=3.4-&gt;seaborn) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib!=3.6.1,&gt;=3.4-&gt;seaborn) (4.53.1)
+Requirement already satisfied: kiwisolver&gt;=1.3.1 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib!=3.6.1,&gt;=3.4-&gt;seaborn) (1.4.5)
+Requirement already satisfied: packaging&gt;=20.0 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib!=3.6.1,&gt;=3.4-&gt;seaborn) (24.0)
+Requirement already satisfied: pillow&gt;=8 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib!=3.6.1,&gt;=3.4-&gt;seaborn) (10.4.0)
+Requirement already satisfied: pyparsing&gt;=2.3.1 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib!=3.6.1,&gt;=3.4-&gt;seaborn) (3.1.2)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from matplotlib!=3.6.1,&gt;=3.4-&gt;seaborn) (2.9.0.post0)
+Requirement already satisfied: pytz&gt;=2020.1 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from pandas&gt;=1.2-&gt;seaborn) (2024.1)
+Requirement already satisfied: tzdata&gt;=2022.7 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from pandas&gt;=1.2-&gt;seaborn) (2024.1)
+Requirement already satisfied: six&gt;=1.5 in /Users/josephmuller/.pyenv/versions/3.12.3/lib/python3.12/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib!=3.6.1,&gt;=3.4-&gt;seaborn) (1.16.0)
+Downloading seaborn-0.13.2-py3-none-any.whl (294 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 294.9/294.9 kB 5.6 MB/s eta 0:00:00a 0:00:01
+Installing collected packages: seaborn
+Successfully installed seaborn-0.13.2
+
+[notice] A new release of pip is available: 24.0 -&gt; 24.1.1
+[notice] To update, run: pip install --upgrade pip
+Note: you may need to restart the kernel to use updated packages.</code></pre>
+</div>
+</div>
+<div id="cell-31" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">seaborn</span> as sns</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">matplotlib.pyplot</span> as plt</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot a heatmap of missing values</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plt.<span class="fu">figure</span>(figsize<span class="op">=</span>(<span class="fl">12</span>, <span class="fl">6</span>))</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>sns.<span class="fu">heatmap</span>(df.<span class="fu">isnull</span>(), cbar<span class="op">=</span>False, cmap<span class="op">=</span><span class="ch">'viridis'</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>plt.<span class="fu">show</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="14" type="1">
+<li>Plot Pairwise Relationships</li>
+</ol>
+<div id="cell-33" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot pairwise relationships in the dataset (useful for numerical columns)</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Warning - this may take a long time to execute if the dataset is large</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>sns.<span class="fu">pairplot</span>(df)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>plt.<span class="fu">show</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="15" type="1">
+<li>Display a Random Sample of Rows</li>
+</ol>
+<div id="cell-35" class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display a random sample of rows (replace 5 with the desired number of rows)</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>df.<span class="fu">sample</span>(<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I’ve conveniently packaged these commands into a single code block you can turn into a handy snippet:</p>
+<div id="cell-37" class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">pandas</span> as pd</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">seaborn</span> as sns</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">matplotlib.pyplot</span> as plt</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the file path to the CSV file</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> <span class="ch">'path/to/your/file.csv'</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the CSV file into a DataFrame</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.<span class="fu">read_csv</span>(file_path)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few rows of the DataFrame</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.head())</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the last few rows of the DataFrame</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.tail())</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Display basic information about the DataFrame</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.info())</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Display summary statistics for numerical columns</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.describe())</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the column names</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.columns)</span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Display data types of each column</span></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.dtypes)</span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for missing values in each column</span></span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.isnull().sum())</span></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Display unique values in a specific column (replace 'column_name' with the actual column name)</span></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df['column_name'].unique())</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Display value counts for a specific column (replace 'column_name' with the actual column name)</span></span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df['column_name'].value_counts())</span></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the shape of the DataFrame (number of rows and columns)</span></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.shape)</span></span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the correlation matrix for numerical columns</span></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.corr())</span></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histograms for numerical columns</span></span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a><span class="co"># df.hist(figsize=(10, 10), bins=30, edgecolor='black')</span></span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.tight_layout()</span></span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot a heatmap of missing values</span></span>
+<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.figure(figsize=(12, 6))</span></span>
+<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a><span class="co"># sns.heatmap(df.isnull(), cbar=False, cmap='viridis')</span></span>
+<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span>
+<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot pairwise relationships in the dataset (useful for numerical columns)</span></span>
+<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a><span class="co"># sns.pairplot(df)</span></span>
+<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span>
+<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Display a random sample of rows (replace 5 with the desired number of rows)</span></span>
+<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.sample(5))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Below is the snippet form of this code which can be pasted into a VS Code snippets file.</p>
+<div id="cell-39" class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Analyze DataFrame"</span><span class="op">:</span> {</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prefix"</span><span class="op">:</span> <span class="st">"analyze_df"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"body"</span><span class="op">:</span> [</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">"import pandas as pd"</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"import seaborn as sns"</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"import matplotlib.pyplot as plt"</span>,</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Define the file path to the CSV file"</span>,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">"file_path = 'path/to/your/file.csv'"</span>,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Load the CSV file into a DataFrame"</span>,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">"df = pd.read_csv(file_path)"</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display the first few rows of the DataFrame"</span>,</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.head())"</span>,</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display the last few rows of the DataFrame"</span>,</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.tail())"</span>,</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display basic information about the DataFrame"</span>,</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.info())"</span>,</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display summary statistics for numerical columns"</span>,</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.describe())"</span>,</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display the column names"</span>,</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.columns)"</span>,</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display data types of each column"</span>,</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.dtypes)"</span>,</span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Check for missing values in each column"</span>,</span>
+<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.isnull().sum())"</span>,</span>
+<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display unique values in a specific column (replace 'column_name' with the actual column name)"</span>,</span>
+<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df['column_name'].unique())"</span>,</span>
+<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display value counts for a specific column (replace 'column_name' with the actual column name)"</span>,</span>
+<span id="cb31-40"><a href="#cb31-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df['column_name'].value_counts())"</span>,</span>
+<span id="cb31-41"><a href="#cb31-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-42"><a href="#cb31-42" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display the shape of the DataFrame (number of rows and columns)"</span>,</span>
+<span id="cb31-43"><a href="#cb31-43" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.shape)"</span>,</span>
+<span id="cb31-44"><a href="#cb31-44" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-45"><a href="#cb31-45" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display the correlation matrix for numerical columns"</span>,</span>
+<span id="cb31-46"><a href="#cb31-46" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.corr())"</span>,</span>
+<span id="cb31-47"><a href="#cb31-47" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-48"><a href="#cb31-48" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Plot histograms for numerical columns"</span>,</span>
+<span id="cb31-49"><a href="#cb31-49" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# df.hist(figsize=(10, 10), bins=30, edgecolor='black')"</span>,</span>
+<span id="cb31-50"><a href="#cb31-50" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# plt.tight_layout()"</span>,</span>
+<span id="cb31-51"><a href="#cb31-51" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# plt.show()"</span>,</span>
+<span id="cb31-52"><a href="#cb31-52" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-53"><a href="#cb31-53" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Plot a heatmap of missing values"</span>,</span>
+<span id="cb31-54"><a href="#cb31-54" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# plt.figure(figsize=(12, 6))"</span>,</span>
+<span id="cb31-55"><a href="#cb31-55" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# sns.heatmap(df.isnull(), cbar=False, cmap='viridis')"</span>,</span>
+<span id="cb31-56"><a href="#cb31-56" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# plt.show()"</span>,</span>
+<span id="cb31-57"><a href="#cb31-57" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-58"><a href="#cb31-58" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Plot pairwise relationships in the dataset (useful for numerical columns)"</span>,</span>
+<span id="cb31-59"><a href="#cb31-59" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# sns.pairplot(df)"</span>,</span>
+<span id="cb31-60"><a href="#cb31-60" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# plt.show()"</span>,</span>
+<span id="cb31-61"><a href="#cb31-61" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>,</span>
+<span id="cb31-62"><a href="#cb31-62" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# Display a random sample of rows (replace 5 with the desired number of rows)"</span>,</span>
+<span id="cb31-63"><a href="#cb31-63" aria-hidden="true" tabindex="-1"></a>            <span class="st">"# print(df.sample(5))"</span></span>
+<span id="cb31-64"><a href="#cb31-64" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb31-65"><a href="#cb31-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">"description"</span><span class="op">:</span> <span class="st">"Analyze a DataFrame with various commands commented out for selective use"</span></span>
+<span id="cb31-66"><a href="#cb31-66" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb31-67"><a href="#cb31-67" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

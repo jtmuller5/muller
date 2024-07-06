@@ -2,7 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/fast-ai-intro-project/index.html"
+      "/posts/fast-ai-dental-radiographs/index.html",
+      "/posts/understanding-your-dataset/index.html"
     ]
   }
 ]
