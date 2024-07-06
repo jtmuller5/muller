@@ -4,7 +4,7 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this blog"
+    "text": "My name is Joe Muller and I am currently working through the Practical Deep Learning for Coders course by Fast AI."
   },
   {
     "objectID": "posts/welcome/index.html",
@@ -23,8 +23,15 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "muller",
+    "title": "Muller",
     "section": "",
-    "text": "Post With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nJul 5, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nJul 2, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+    "text": "Fast AI Dental Radiographs\n\n\n\n\n\n\nfastai\n\n\ndeep-learning\n\n\n\nExploring dental radiographs with Fast AI.\n\n\n\n\n\nJul 5, 2024\n\n\nJoe Muller\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/fast-ai-intro-project/index.html",
+    "href": "posts/fast-ai-intro-project/index.html",
+    "title": "Fast AI Dental Radiographs",
+    "section": "",
+    "text": "Getting Started\nI’m currently working on the Fast AI course and this is my first project. I’m excited to see how well I can do.\n\n2+2\n\n4\n\n\n\n\nDeploying the Model\nHuggingFace Spaces and Gradio"
   }
 ]

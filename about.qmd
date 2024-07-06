@@ -6,14 +6,21 @@ about:
   links:
     - icon: twitter
       text: Twitter
-      href: https://twitter.com
+      href: https://x.com/code_ontherocks
     - icon: linkedin
       text: LinkedIn
-      href: https://linkedin.com
+      href: https://www.linkedin.com/in/joseph-muller-iii-59671a10a/
     - icon: github
       text: Github
-      href: https://github.com
+      href: https://github.com/jtmuller5
 
 ---
 
-About this blog
+My name is Joe Muller and I am currently working through the [Practical Deep Learning for Coders](https://course.fast.ai/) course by Fast AI.
+
+# Learning Resources
+
+- https://course.fast.ai/
+- https://github.com/fastai/fastbook
+- https://fullstackdeeplearning.com/course/
+- https://d2l.ai/index.html

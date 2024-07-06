@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "understanding-your-dataset"
+version = "0.1.0"
+description = ""
+authors = ["Joseph Muller <jtmuller5@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pandas = "^2.2.2"
+ipykernel = "^6.29.5"
+fastai = "^2.7.15"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
